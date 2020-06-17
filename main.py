@@ -7,9 +7,10 @@ from typing import Tuple
 
 def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
     top_count: List[Tuple[str, int]] = [(k, v) for k, v in count.items()]
-    sorted(top_count, key=lambda t: t[1])
+    sorted_list: List[Tuple[str, int]] =\
+        sorted(top_count, key=lambda t: t[1], reverse=True)
 
-    return top_count[:n]
+    return sorted_list[:n]
 
 
 def tally(lists: List[List[str]]) -> Dict[str, int]:
