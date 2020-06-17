@@ -1,12 +1,16 @@
 import sys
-from typing import List
 from typing import Dict
 from typing import IO
+from typing import List
 from typing import Tuple
 
 
 def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
-    top_count: List[Tuple[str, int]] = [(k, v) for k, v in count.items()]
+    top_count: List[Tuple[str, int]] = []
+    for k, v in count.items():
+        tup: Tup[str, int] = (k, v)
+        top_count.append(tup)
+
     sorted_list: List[Tuple[str, int]] =\
         sorted(top_count, key=lambda t: t[1], reverse=True)
 
