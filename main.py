@@ -5,6 +5,14 @@ from typing import List
 from typing import Tuple
 
 
+# Yield successive n-sized
+# chunks from l.
+def divide_chunks(alist, n):
+    # looping till length l
+    for i in range(0, len(alist), n):
+        yield alist[i:i + n]
+
+
 def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
     top_count: List[Tuple[str, int]] = []
     for k, v in count.items():
@@ -19,6 +27,7 @@ def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
 
 def tally(lists: List[List[str]]) -> Dict[str, int]:
     count: Dict[str, int] = dict()
+
     for alist in lists:
         for k in alist:
             if k not in count:
