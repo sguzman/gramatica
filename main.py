@@ -7,7 +7,7 @@ from typing import Tuple
 
 # Yield successive n-sized
 # chunks from l.
-def divide_chunks(alist, n):
+def chunk(alist: List[str], n: int):
     # looping till length l
     for i in range(0, len(alist), n):
         yield alist[i:i + n]
@@ -25,15 +25,17 @@ def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
     return sorted_list[:n]
 
 
-def tally(lists: List[List[str]]) -> Dict[str, int]:
+def tally(lists: List[List[str]], n: int) -> Dict[str, int]:
     count: Dict[str, int] = dict()
 
     for alist in lists:
-        for k in alist:
-            if k not in count:
-                count[k] = 1
-            else:
-                count[k] = count[k] + 1
+        chunky_soup = chunk(alist, n)
+        for chunked in chunky_soup:
+            for k in chunked:
+                if k not in count:
+                    count[k] = 1
+                else:
+                    count[k] = count[k] + 1
 
     return count
 
@@ -50,7 +52,7 @@ def main() -> None:
         array: List[str] = list(io.read())
         lists.append(array)
 
-    tallied: Dict[str, int] = tally(lists)
+    tallied: Dict[str, int] = tally(lists, 2)
     ranked: List[Tuple[str, int]] = top(tallied, 10)
 
     for line in ranked:
