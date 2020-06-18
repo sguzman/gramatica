@@ -5,14 +5,9 @@ from typing import List
 from typing import Tuple
 
 
-Lexeme = List[str]
-Freq = Tuple[Lexeme, int]
-WordDict = Dict[Lexeme, int]
-
-
 # Yield successive n-sized
 # chunks from l.
-def chunk(alist: Lexeme, n: int) -> Lexeme:
+def chunk(alist: str, n: int) -> str:
     # looping till length l
     for i in range(0, len(alist), n):
         word: str = alist[i:i+n]
@@ -20,31 +15,31 @@ def chunk(alist: Lexeme, n: int) -> Lexeme:
         yield word
 
 
-def top(count: WordDict, n: int) -> List[Freq]:
-    top_count: List[Freq] = []
-    for k, v in count.items():
-        tup: Freq = (k, v)
-        top_count.append(tup)
-
-    sorted_list: List[Freq] =\
-        sorted(top_count, key=lambda t: t[1], reverse=True)
-
-    return sorted_list[:n]
-
-
-def tally(lists: List[Lexeme], n: int) -> WordDict:
-    count: WordDict = dict()
+def tally(lists: List[List[str]], n: int) -> Dict[str, int]:
+    count: Dict[str, int] = dict()
 
     for alist in lists:
         chunky_soup = chunk(alist, n)
         for chunked in chunky_soup:
-            for k in chunked:
-                if k not in count:
-                    count[k] = 1
-                else:
-                    count[k] = count[k] + 1
+            chunked_str: str = ''.join(chunked)
+            if chunked_str not in count:
+                count[chunked_str] = 1
+            else:
+                count[chunked_str] = count[chunked_str] + 1
 
     return count
+
+
+def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
+    top_count: List[Tuple[str, int]] = []
+    for k, v in count.items():
+        tup: Tuple[str, int] = (k, v)
+        top_count.append(tup)
+
+    sorted_list: List[Tuple[str, int]] =\
+        sorted(top_count, key=lambda t: t[1], reverse=True)
+
+    return sorted_list[:n]
 
 
 def main() -> None:
@@ -52,18 +47,18 @@ def main() -> None:
         print('No args passed')
         sys.exit(1)
 
-    files: List[str] = sys.argv[1:]
-    lists: List[List[str]] = []
+    files: Lexeme = sys.argv[1:]
+    lists: List[Lexeme] = []
     for file in files:
         io: IO = open(file, 'r')
-        array: List[str] = list(io.read())
+        array: Lexeme = list(io.read())
         lists.append(array)
 
-    tallied: Dict[str, int] = tally(lists, 2)
+    tallied: WordDict = tally(lists, 2)
     ranked: List[Tuple[str, int]] = top(tallied, 10)
 
     for line in ranked:
-        print(line)
+        print(list(line[0]), line[1])
 
 
 if __name__ == '__main__':
