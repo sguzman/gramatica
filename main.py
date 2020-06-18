@@ -18,6 +18,14 @@ TupTup = Tuple[int, int, int, int]
 TupFin = Tuple[str, int, int, int, int]
 
 
+default_filter_funcs: List[Callable[[TupFin], bool]] =\
+        [
+            lambda tup: len(tup[0]) != 1,
+            lambda tup: tup[1] != 1,
+            lambda tup: len(tup[0]) != tup[2]
+        ]
+
+
 # Yield successive n-sized
 # chunks from l.
 def chunk(alist: str, n: int) -> str:
@@ -50,8 +58,8 @@ def tally(
 
 def drop(
         alist: List[TupFin],
-        funcs: List[Callable[[TupFin], List[TupFin]]] = List[lambda x: x]
-        ) -> List[Tuple[str, int, int, int, int]]:
+        funcs: List[Callable[[TupFin], bool]] = default_filter_funcs
+        ) -> List[TupFin]:
 
     alist_filtered: List[TupFin] = []
     for line in alist:
@@ -66,15 +74,14 @@ def drop(
     return alist_filtered
 
 
-def top(count: Dict[str, int], n: int) -> List[Tuple[str, int]]:
-    top_count: List[Tuple[str, int]] = []
+def top(count: List[TupFin], n: int) -> List[TupFin]:
+    top_count: List[TupFin] = []
 
-    for k, v in count.items():
-        tup: Tuple[str, int] = (k, v)
+    for tup in count:
         top_count.append(tup)
 
-    sorted_list: List[Tuple[str, int]] =\
-        sorted(top_count, key=lambda t: t[1], reverse=True)
+    sorted_list: List[TupFin] =\
+        sorted(top_count, key=lambda t: t[-1], reverse=True)
 
     return sorted_list[:n]
 
@@ -85,23 +92,26 @@ def main() -> None:
         sys.exit(1)
 
     files: Lexeme = sys.argv[1:]
-    lists: List[Lexeme] = []
+    lists: List[str] = []
     for file in files:
         io: IO = open(file, 'r')
-        array: Lexeme = list(io.read())
+        array: str = list(io.read())
         lists.append(array)
+
+        print(file, len(array))
 
     count: Dict[str, int] = dict()
     for i in range(2, 20, 1):
         tally(lists, i, count)
 
-    alist: List[Tuple[str, int, int, int, int]] = []
+    alist: List[TupFin] = []
     for k, v in count.items():
         alist.append((k, v[0], v[1], v[2], v[3]))
 
-    ranked: List[Tuple[str, int]] = top(count, 10)
+    ranked: List[TupFin] = top(alist, 10)
+
     for line in ranked:
-        print(list(line[0]), line[1])
+        print(list(line[0]), line[1], line[2], line[3], line[4])
 
 
 if __name__ == '__main__':
