@@ -1,4 +1,4 @@
-# gramatica
+# Tally Letters
 A collection of tools for playing with grammars
 
 ### Things to measure
