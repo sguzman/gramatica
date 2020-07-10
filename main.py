@@ -86,12 +86,26 @@ def top(count: List[TupFin], n: int) -> List[TupFin]:
     return sorted_list[:n]
 
 
+"""
+ Tuple[
+ int - len(Lexeme)
+ int - frequency
+ int - strength
+ int - (len(Lexeme) - 1) * frequency
+ ]
+"""
+def output(ranked: List[TupFin]) -> None:
+    print('lex', 'len(lex)', 'freq', 'str', '(len(lex)-1)freq', sep='\t')
+    for line in ranked:
+        print(list(line[0]), line[1], line[2], line[3], line[4], sep='\t')
+
+
 def main() -> None:
     if len(sys.argv) < 2:
         print('No args passed')
         sys.exit(1)
 
-    files: Lexeme = sys.argv[1:]
+    files: List[str] = sys.argv[1:]
     lists: List[str] = []
     for file in files:
         io: IO = open(file, 'r')
@@ -109,9 +123,7 @@ def main() -> None:
         alist.append((k, v[0], v[1], v[2], v[3]))
 
     ranked: List[TupFin] = top(alist, 10)
-
-    for line in ranked:
-        print(list(line[0]), line[1], line[2], line[3], line[4])
+    output(ranked)
 
 
 if __name__ == '__main__':
